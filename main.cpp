@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <string>
+#include <fstream>
 
 struct field {
     char point = '.';
@@ -155,6 +156,49 @@ void info(field::character enemy) {
     } else std::cout << "Dead" << std::endl;
 }
 
+void save(field field[20][20], field::character &player, field::character enemy[5]){
+    std::string file_name;
+    std::cout<<"Enter filename: ";
+    std::cin>>file_name;
+    if(!(file_name.find(".txt")))
+        file_name+=".txt";
+    std::ofstream file(file_name);
+    for(int i=0;i<20;i++) {
+        for (int j = 0; j < 20; j++) {
+            file<<field[i][j].point;
+        }
+        file<<std::endl;
+    }
+    file<<player.name<<' '<<player.hp<<' '<<player.def<<' '<<player.attack<<' '<<player.alive<<' '<<player.x<<' '<<player.y<<std::endl;
+    for(int i=0;i<5;i++){
+        file<<enemy[i].name<<' '<<enemy[i].hp<<' '<<enemy[i].def<<' '<<enemy[i].attack<<' '<<enemy[i].alive<<' '<<enemy[i].x<<' '<<enemy[i].y<<std::endl;
+    }
+    file.close();
+}
+
+void load(field field[20][20], field::character &player, field::character enemy[5]){
+    std::string file_name;
+    std::cout<<"Enter filename: ";
+    std::cin>>file_name;
+    if(!(file_name.find(".txt")))
+        file_name+=".txt";
+    std::ifstream file(file_name);
+    if(file.is_open()==0){
+        std::cout<<"Error!";
+        load(field,player,enemy);
+    }
+    for(int i=0;i<20;i++) {
+        for (int j = 0; j < 20; j++) {
+            file>>field[i][j].point;
+        }
+    }
+    file>>player.name>>player.hp>>player.def>>player.attack>>player.alive>>player.x>>player.y;
+    for(int i=0;i<5;i++){
+        file>>enemy[i].name>>enemy[i].hp>>enemy[i].def>>enemy[i].attack>>enemy[i].alive>>enemy[i].x>>enemy[i].y;
+    }
+    file.close();
+}
+
 
 void player_movement(field field[20][20], field::character &player, field::character enemy[5]) {
     if (player.alive == 1) {
@@ -229,9 +273,12 @@ void player_movement(field field[20][20], field::character &player, field::chara
             } else std::cout << "Invalid number" << std::endl;
             player_movement(field, player, enemy);
         } else if (command == "save") {
-
+            save(field,player,enemy);
+            player_movement(field, player, enemy);
         } else if (command == "load") {
-
+            load(field,player,enemy);
+            show_field(field);
+            player_movement(field, player, enemy);
         } else {
             std::cout << "Error command!!" << std::endl;
             player_movement(field, player, enemy);
