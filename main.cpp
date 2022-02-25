@@ -83,13 +83,17 @@ void enemy_movement(field field[20][20], field::character enemy[5], field::chara
     for (int i = 0; i < 5; i++) {
         if (enemy[i].alive == 1) {
             int move = rand() % 3;
-            if (move == 0 and enemy[i].x - 1 > 0) {
+            if (move == 0 and enemy[i].x - 1 >= 0) {
                 if (field[enemy[i].x - 1][enemy[i].y].point == '.') {
                     field[enemy[i].x][enemy[i].y].point = '.';
                     enemy[i].x = enemy[i].x - 1;
                     field[enemy[i].x][enemy[i].y].point = 'E';
                 } else if (field[enemy[i].x - 1][enemy[i].y].point == 'P') {
                     attack(enemy[i], player);
+                    std::cout << enemy[i].name << " attacked " << player.name << std::endl;
+                    if (player.alive == 0) {
+                        std::cout << enemy[i].name << " kill " << player.name << std::endl;
+                    } else std::cout << player.name << " have " << player.hp << " hp" << std::endl;
                 }
             } else if (move == 1 and enemy[i].y + 1 < 20) {
                 if (field[enemy[i].x][enemy[i].y + 1].point == '.') {
@@ -98,6 +102,10 @@ void enemy_movement(field field[20][20], field::character enemy[5], field::chara
                     field[enemy[i].x][enemy[i].y].point = 'E';
                 } else if (field[enemy[i].x][enemy[i].y + 1].point == 'P') {
                     attack(enemy[i], player);
+                    std::cout << enemy[i].name << " attacked " << player.name << std::endl;
+                    if (player.alive == 0) {
+                        std::cout << enemy[i].name << " kill " << player.name << std::endl;
+                    } else std::cout << player.name << " have " << player.hp << " hp" << std::endl;
                 }
             } else if (move == 2 and enemy[i].x + 1 < 20) {
                 if (field[enemy[i].x + 1][enemy[i].y].point == '.') {
@@ -106,14 +114,22 @@ void enemy_movement(field field[20][20], field::character enemy[5], field::chara
                     field[enemy[i].x][enemy[i].y].point = 'E';
                 } else if (field[enemy[i].x + 1][enemy[i].y].point == 'P') {
                     attack(enemy[i], player);
+                    std::cout << enemy[i].name << " attacked " << player.name << std::endl;
+                    if (player.alive == 0) {
+                        std::cout << enemy[i].name << " kill " << player.name << std::endl;
+                    } else std::cout << player.name << " have " << player.hp << " hp" << std::endl;
                 }
-            } else if (move == 3 and enemy[i].y - 1 > 0) {
+            } else if (move == 3 and enemy[i].y - 1 >= 0) {
                 if (field[enemy[i].x][enemy[i].y - 1].point == '.') {
                     field[enemy[i].x][enemy[i].y].point = '.';
                     enemy[i].y = enemy[i].y - 1;
                     field[enemy[i].x][enemy[i].y].point = 'E';
                 } else if (field[enemy[i].x][enemy[i].y - 1].point == 'P') {
                     attack(enemy[i], player);
+                    std::cout << enemy[i].name << " attacked " << player.name << std::endl;
+                    if (player.alive == 0) {
+                        std::cout << enemy[i].name << " kill " << player.name << std::endl;
+                    } else std::cout << player.name << " have " << player.hp << " hp" << std::endl;
                 }
             }
         }
@@ -134,9 +150,9 @@ void info(field::character enemy) {
     std::cout << "HP: " << enemy.hp << std::endl;
     std::cout << "Def: " << enemy.def << std::endl;
     std::cout << "Attack: " << enemy.attack << std::endl;
-    if(enemy.alive==1) {
+    if (enemy.alive == 1) {
         std::cout << "Coordinates: " << enemy.x << " " << enemy.y << std::endl;
-    } else std::cout<<"Dead"<<std::endl;
+    } else std::cout << "Dead" << std::endl;
 }
 
 
@@ -146,7 +162,7 @@ void player_movement(field field[20][20], field::character &player, field::chara
                 << "Enter direction(top, right, bottom, left) or enter info to find out your or enemies stats or save/load:";
         std::string command;
         std::cin >> command;
-        if (command == "top" and player.x - 1 > 0) {
+        if (command == "top" and player.x - 1 >= 0) {
             if (field[player.x - 1][player.y].point == '.') {
                 field[player.x][player.y].point = '.';
                 player.x = player.x - 1;
@@ -154,9 +170,9 @@ void player_movement(field field[20][20], field::character &player, field::chara
             } else if (field[player.x - 1][player.y].point == 'E') {
                 int enemyNumber = enemy_find(enemy, player.x - 1, player.y);
                 attack(player, enemy[enemyNumber]);
-                std::cout << "The player attacked the enemy #" << enemyNumber<<std::endl;
+                std::cout << "The player attacked the enemy #" << enemyNumber << std::endl;
                 if (enemy[enemyNumber].alive == 0) {
-                    std::cout << "The player kill the enemy #" << enemyNumber<<std::endl;
+                    std::cout << "The player kill the enemy #" << enemyNumber << std::endl;
                     field[player.x - 1][player.y].point = '.';
                 }
             }
@@ -168,9 +184,9 @@ void player_movement(field field[20][20], field::character &player, field::chara
             } else if (field[player.x][player.y + 1].point == 'E') {
                 int enemyNumber = enemy_find(enemy, player.x, player.y + 1);
                 attack(player, enemy[enemyNumber]);
-                std::cout << "The player attacked the " << enemy[enemyNumber].name<<std::endl;
+                std::cout << "The player attacked the " << enemy[enemyNumber].name << std::endl;
                 if (enemy[enemyNumber].alive == 0) {
-                    std::cout << "The player kill the " << enemy[enemyNumber].name<<std::endl;
+                    std::cout << "The player kill the " << enemy[enemyNumber].name << std::endl;
                     field[player.x][player.y + 1].point = '.';
                 }
             }
@@ -182,13 +198,13 @@ void player_movement(field field[20][20], field::character &player, field::chara
             } else if (field[player.x + 1][player.y].point == 'E') {
                 int enemyNumber = enemy_find(enemy, player.x + 1, player.y);
                 attack(player, enemy[enemyNumber]);
-                std::cout << "The player attacked the " << enemy[enemyNumber].name<<std::endl;
+                std::cout << "The player attacked the " << enemy[enemyNumber].name << std::endl;
                 if (enemy[enemyNumber].alive == 0) {
-                    std::cout << "The player kill the " << enemy[enemyNumber].name<<std::endl;
+                    std::cout << "The player kill the " << enemy[enemyNumber].name << std::endl;
                     field[player.x + 1][player.y].point = '.';
                 }
             }
-        } else if (command == "left" and player.y - 1 > 0) {
+        } else if (command == "left" and player.y - 1 >= 0) {
             if (field[player.x][player.y - 1].point == '.') {
                 field[player.x][player.y].point = '.';
                 player.y = player.y - 1;
@@ -196,27 +212,28 @@ void player_movement(field field[20][20], field::character &player, field::chara
             } else if (field[player.x][player.y - 1].point == 'E') {
                 int enemyNumber = enemy_find(enemy, player.x, player.y - 1);
                 attack(player, enemy[enemyNumber]);
-                std::cout << "The player attacked the " << enemy[enemyNumber].name<<std::endl;
+                std::cout << "The player attacked the " << enemy[enemyNumber].name << std::endl;
                 if (enemy[enemyNumber].alive == 0) {
-                    std::cout << "The player kill the " << enemy[enemyNumber].name<<std::endl;
+                    std::cout << "The player kill the " << enemy[enemyNumber].name << std::endl;
                     field[player.x][player.y - 1].point = '.';
                 }
             }
         } else if (command == "info") {
-            std::cout << "Enter enemy number: ";
+            std::cout << "Enter enemy number(or -1 player info): ";
             int enemyNumber;
             std::cin >> enemyNumber;
             if (enemyNumber >= 0 and enemyNumber < 5)
                 info(enemy[enemyNumber]);
-            else std::cout << "Invalid number" << std::endl;
+            else if (enemyNumber == -1) {
+                info(player);
+            } else std::cout << "Invalid number" << std::endl;
             player_movement(field, player, enemy);
         } else if (command == "save") {
 
         } else if (command == "load") {
 
         } else {
-            std::cout << "Error command!!" <<
-                      std::endl;
+            std::cout << "Error command!!" << std::endl;
             player_movement(field, player, enemy);
         }
     }
@@ -249,17 +266,17 @@ int main() {
     field::character player;
     arrangement_player(field, player);
 
-    while(player.alive!=0 or alive_enemy(enemy)!=0){
+    while (player.alive != 0 or alive_enemy(enemy) != 0) {
         enemy_movement(field, enemy, player);
-        if(player.alive==0){
-            std::cout<<"Game over!"<<std::endl;
+        if (player.alive == 0) {
+            std::cout << "Game over!" << std::endl;
             return 1;
-        }else{
+        } else {
             show_field(field);
-            player_movement(field,player,enemy);
+            player_movement(field, player, enemy);
         }
-        if(alive_enemy(enemy)==0){
-            std::cout<<"You win!"<<std::endl;
+        if (alive_enemy(enemy) == 0) {
+            std::cout << "You win!" << std::endl;
             return 0;
         }
     }
